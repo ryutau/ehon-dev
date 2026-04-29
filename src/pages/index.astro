@@ -1,0 +1,86 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import Hero from "~/components/Hero.astro";
+import SectionTitle from "~/components/SectionTitle.astro";
+import ActivityCard from "~/components/ActivityCard.astro";
+import InstagramCTA from "~/components/InstagramCTA.astro";
+import { getActivities } from "~/lib/microcms";
+
+const activities = await getActivities();
+const latest = activities.slice(0, 3);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const heroImage = latest[0]?.mainImage
+  ? `${latest[0].mainImage.url}?w=1200&fm=webp`
+  : undefined;
+---
+
+<BaseLayout
+  title={undefined}
+  description="えほんの森は、絵本の読み聞かせと地域でのつどいを大切にする小さな活動です。最新の活動やお知らせはInstagramで発信しています。"
+>
+  <Hero imageSrc={heroImage} imageAlt={latest[0]?.title} />
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Recent activities"
+        title="最近の活動"
+        description="読み聞かせや絵本との出会いの場を、すこしずつ続けています。"
+      />
+
+      {latest.length === 0 ? (
+        <p class="muted">まだ公開済みの活動記事がありません。</p>
+      ) : (
+        <div class="card-grid">
+          {latest.map((activity, i) => (
+            <ActivityCard activity={activity} eager={i === 0} />
+          ))}
+        </div>
+      )}
+
+      {activities.length > 3 && (
+        <div class="more-link">
+          <a class="button button--ghost" href={`${base}/activities/`}>
+            活動の一覧を見る
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section about-preview">
+    <div class="container about-preview__inner">
+      <SectionTitle
+        eyebrow="About"
+        title="えほんの森について"
+        description="絵本を読むひとときを、子どもも大人も自分のペースで楽しめる場所をつくっています。"
+      />
+      <p>
+        週末の小さな読み聞かせ、季節のおはなし会、絵本を持ち寄って話す時間など、
+        地域の中で「絵本に触れる入り口」をすこしずつ用意しています。
+      </p>
+      <p>
+        <a class="button button--ghost" href={`${base}/about/`}>えほんの森について 詳しく</a>
+      </p>
+    </div>
+  </section>
+
+  <InstagramCTA />
+</BaseLayout>
+
+<style>
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-5);
+  }
+  .more-link {
+    margin-top: var(--space-6);
+    text-align: center;
+  }
+  .about-preview__inner {
+    max-width: 720px;
+  }
+</style>

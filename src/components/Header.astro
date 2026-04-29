@@ -1,0 +1,160 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const link = (path: string) => `${base}${path}`;
+
+const instagramUrl = "https://www.instagram.com/";
+
+const nav = [
+  { href: link("/"), label: "トップ" },
+  { href: link("/activities/"), label: "最近の活動" },
+  { href: link("/about/"), label: "えほんの森について" },
+  { href: link("/contact/"), label: "お問い合わせ" },
+];
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__logo" href={link("/")}>
+      <span class="site-header__logo-mark" aria-hidden="true">🌿</span>
+      <span>えほんの森</span>
+    </a>
+
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="メニューを開閉" />
+    <label for="nav-toggle" class="nav-toggle-button" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+
+    <nav class="site-nav" aria-label="メイン">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+        <li>
+          <a
+            class="site-nav__instagram"
+            href={instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Instagram
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+    gap: var(--space-4);
+  }
+  .site-header__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .site-header__logo-mark {
+    font-size: 1.4rem;
+  }
+  .site-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: var(--space-5);
+    align-items: center;
+  }
+  .site-nav a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 8px 0;
+  }
+  .site-nav a:hover {
+    color: var(--color-accent-strong);
+  }
+  .site-nav__instagram {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong) !important;
+    padding: 8px 14px !important;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  .nav-toggle,
+  .nav-toggle-button {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    .nav-toggle-button {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      padding: 0 10px;
+      border-radius: 8px;
+    }
+    .nav-toggle-button span {
+      display: block;
+      height: 2px;
+      background: var(--color-text);
+      border-radius: 2px;
+      transition: transform 0.2s ease;
+    }
+    .site-nav {
+      position: absolute;
+      inset: 64px 0 auto 0;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .site-nav ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: var(--space-3) var(--space-5);
+    }
+    .site-nav li {
+      border-bottom: 1px solid var(--color-border);
+    }
+    .site-nav li:last-child {
+      border-bottom: none;
+    }
+    .site-nav a {
+      display: block;
+      padding: 14px 0;
+    }
+    .site-nav__instagram {
+      display: inline-block;
+      margin-block: var(--space-3);
+    }
+    .nav-toggle:checked ~ .site-nav {
+      max-height: 480px;
+    }
+  }
+</style>

@@ -1,0 +1,75 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import SectionTitle from "~/components/SectionTitle.astro";
+import InstagramCTA from "~/components/InstagramCTA.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout
+  title="えほんの森について"
+  description="えほんの森は、絵本を通して地域の親子や子どもたちが出会う小さな活動です。"
+>
+  <section class="section">
+    <div class="container about">
+      <SectionTitle
+        eyebrow="About"
+        title="えほんの森について"
+        description="絵本のページをひらく時間が、地域のなかにすこしずつ増えるように。"
+      />
+
+      <div class="about__body">
+        <p>
+          えほんの森は、絵本の読み聞かせや、絵本をきっかけにした交流の場をつくっている小さな活動です。
+          子どもも、大人も、好きな絵本を片手にゆっくり過ごせる場をめざしています。
+        </p>
+
+        <h2>大切にしていること</h2>
+        <ul>
+          <li>絵本のページをめくる時間を、急がずに楽しむこと。</li>
+          <li>子どもも大人も、自分のペースで参加できること。</li>
+          <li>地域のなかで、ちいさく、長くつづけること。</li>
+        </ul>
+
+        <h2>主な活動</h2>
+        <ul>
+          <li>定期的な読み聞かせ会</li>
+          <li>季節ごとのおはなし会</li>
+          <li>絵本を持ち寄って話す時間</li>
+        </ul>
+
+        <h2>場所と日時</h2>
+        <p>
+          開催場所と日時は、活動ごとに変わります。
+          最新の予定は <a href={`${base}/activities/`}>活動の記録</a> や Instagram で発信しています。
+        </p>
+
+        <h2>運営</h2>
+        <p>
+          えほんの森は、地域の有志による任意の活動です。
+          ご質問・参加のご希望は <a href={`${base}/contact/`}>お問い合わせ</a> からお気軽にどうぞ。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <InstagramCTA />
+</BaseLayout>
+
+<style>
+  .about__body {
+    max-width: 720px;
+    font-size: 1.02rem;
+    line-height: 1.9;
+  }
+  .about__body h2 {
+    margin-top: var(--space-7);
+    font-size: 1.25rem;
+  }
+  .about__body ul {
+    padding-left: 1.4em;
+  }
+  .about__body li {
+    margin-bottom: var(--space-2);
+  }
+</style>

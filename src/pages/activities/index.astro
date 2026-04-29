@@ -1,0 +1,41 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import SectionTitle from "~/components/SectionTitle.astro";
+import ActivityCard from "~/components/ActivityCard.astro";
+import { getActivities } from "~/lib/microcms";
+
+const activities = await getActivities();
+---
+
+<BaseLayout
+  title="活動の記録"
+  description="えほんの森のこれまでの活動の記録です。読み聞かせやおはなし会の様子をご紹介しています。"
+>
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Activities"
+        title="活動の記録"
+        description="新しい活動から順にならんでいます。気になるテーマがあれば、画像をタップしてみてください。"
+      />
+
+      {activities.length === 0 ? (
+        <p class="muted">まだ公開済みの活動記事がありません。</p>
+      ) : (
+        <div class="card-grid">
+          {activities.map((activity) => (
+            <ActivityCard activity={activity} />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-5);
+  }
+</style>

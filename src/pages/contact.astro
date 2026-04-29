@@ -1,0 +1,82 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import SectionTitle from "~/components/SectionTitle.astro";
+
+const instagramUrl = "https://www.instagram.com/";
+const emailAddress = "hello@example.com";
+---
+
+<BaseLayout
+  title="お問い合わせ"
+  description="えほんの森へのご質問・参加のご希望は、Instagramまたはメールでお気軽にご連絡ください。"
+>
+  <section class="section">
+    <div class="container contact">
+      <SectionTitle
+        eyebrow="Contact"
+        title="お問い合わせ"
+        description="読み聞かせ会のご相談、参加のご希望、活動のお声がけなど、お気軽にどうぞ。"
+      />
+
+      <div class="contact__channels">
+        <a class="contact__channel" href={instagramUrl} target="_blank" rel="noopener noreferrer">
+          <span class="contact__channel-icon" aria-hidden="true">📷</span>
+          <span class="contact__channel-label">Instagramでメッセージ</span>
+          <span class="muted">DMへのご連絡が一番早く受け取れます。</span>
+        </a>
+
+        <a class="contact__channel" href={`mailto:${emailAddress}`}>
+          <span class="contact__channel-icon" aria-hidden="true">✉️</span>
+          <span class="contact__channel-label">メール</span>
+          <span class="muted">{emailAddress}</span>
+        </a>
+      </div>
+
+      <p class="contact__note muted">
+        ※ 担当者がボランティアで対応しているため、お返事まで数日いただくことがあります。
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    max-width: 720px;
+  }
+  .contact__channels {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .contact__channel {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: var(--space-4);
+    row-gap: var(--space-1);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    text-decoration: none;
+    color: var(--color-text);
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+  .contact__channel:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  .contact__channel-icon {
+    grid-row: span 2;
+    font-size: 1.6rem;
+    align-self: center;
+  }
+  .contact__channel-label {
+    font-weight: 700;
+  }
+  .contact__note {
+    font-size: 0.9rem;
+  }
+</style>

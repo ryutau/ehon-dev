@@ -1,0 +1,247 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import { getActivities } from "~/lib/microcms";
+import type { Activity } from "~/lib/microcms";
+
+export async function getStaticPaths() {
+  const activities = await getActivities();
+  return activities.map((activity, index) => ({
+    params: { id: activity.id },
+    props: {
+      activity,
+      prev: activities[index + 1] ?? null,
+      next: activities[index - 1] ?? null,
+    },
+  }));
+}
+
+type Props = {
+  activity: Activity;
+  prev: Activity | null;
+  next: Activity | null;
+};
+
+const { activity, prev, next } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const dateLabel = new Date(activity.date).toLocaleDateString("ja-JP", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const mainImageSrc = `${activity.mainImage.url}?w=1200&fm=webp`;
+const ogImage = `${activity.mainImage.url}?w=1200&fm=jpg`;
+---
+
+<BaseLayout
+  title={activity.title}
+  description={activity.summary}
+  ogImage={ogImage}
+  ogType="article"
+  publishedTime={activity.publishedAt ?? activity.date}
+>
+  <article class="article">
+    <div class="container">
+      <p class="article__back">
+        <a href={`${base}/activities/`}>← 活動の記録へ戻る</a>
+      </p>
+
+      <header class="article__header">
+        <time class="article__date" datetime={activity.date}>{dateLabel}</time>
+        <h1 class="article__title">{activity.title}</h1>
+        <p class="article__summary">{activity.summary}</p>
+      </header>
+
+      <figure class="article__hero">
+        <img
+          src={mainImageSrc}
+          width="1200"
+          height={Math.round((activity.mainImage.height / activity.mainImage.width) * 1200)}
+          alt={activity.title}
+          decoding="async"
+        />
+      </figure>
+
+      <div class="rich-text article__body" set:html={activity.body} />
+
+      {activity.gallery && activity.gallery.length > 0 && (
+        <section class="article__gallery">
+          <h2>活動の様子</h2>
+          <div class="gallery-grid">
+            {activity.gallery.map((item) => (
+              <figure>
+                <img
+                  src={`${item.image.url}?w=800&fm=webp`}
+                  width="800"
+                  height={Math.round((item.image.height / item.image.width) * 800)}
+                  alt={item.caption ?? activity.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+                {item.caption && <figcaption>{item.caption}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {activity.links && activity.links.length > 0 && (
+        <section class="article__links">
+          <h2>関連リンク</h2>
+          <ul>
+            {activity.links.map((link) => (
+              <li>
+                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {activity.instagramUrl && (
+        <section class="article__instagram">
+          <h2>Instagram</h2>
+          <p>
+            <a
+              class="button"
+              href={activity.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              この活動のInstagram投稿を見る
+            </a>
+          </p>
+        </section>
+      )}
+
+      <nav class="article__pager" aria-label="記事ナビゲーション">
+        <div>
+          {prev && (
+            <a href={`${base}/activities/${prev.id}/`} class="article__pager-link">
+              <span class="muted">前の活動</span>
+              <strong>{prev.title}</strong>
+            </a>
+          )}
+        </div>
+        <div class="article__pager--right">
+          {next && (
+            <a href={`${base}/activities/${next.id}/`} class="article__pager-link">
+              <span class="muted">次の活動</span>
+              <strong>{next.title}</strong>
+            </a>
+          )}
+        </div>
+      </nav>
+
+      <p class="article__back article__back--bottom">
+        <a class="button button--ghost" href={`${base}/activities/`}>活動の記録へ戻る</a>
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    padding-block: var(--space-7);
+  }
+  .article__back {
+    margin-bottom: var(--space-5);
+  }
+  .article__header {
+    max-width: 720px;
+    margin-bottom: var(--space-6);
+  }
+  .article__date {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+  }
+  .article__title {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    margin: var(--space-3) 0 var(--space-4);
+  }
+  .article__summary {
+    font-size: 1.05rem;
+    color: var(--color-muted);
+    margin: 0;
+  }
+  .article__hero {
+    margin: 0 0 var(--space-7);
+  }
+  .article__hero img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 16px 40px var(--color-shadow);
+  }
+  .article__body {
+    max-width: 720px;
+  }
+  .article__gallery,
+  .article__links,
+  .article__instagram {
+    margin-top: var(--space-7);
+    max-width: 880px;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-4);
+  }
+  .gallery-grid figure {
+    margin: 0;
+  }
+  .gallery-grid img {
+    border-radius: var(--radius-md);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+  }
+  .gallery-grid figcaption {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    margin-top: var(--space-2);
+  }
+  .article__links ul {
+    padding-left: 1.4em;
+  }
+  .article__pager {
+    margin-top: var(--space-8);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  .article__pager--right {
+    text-align: right;
+  }
+  .article__pager-link {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    text-decoration: none;
+    color: var(--color-text);
+    max-width: 100%;
+  }
+  .article__pager-link:hover {
+    border-color: var(--color-accent);
+  }
+  .article__back--bottom {
+    margin-top: var(--space-7);
+  }
+  @media (max-width: 640px) {
+    .article__pager {
+      grid-template-columns: 1fr;
+    }
+    .article__pager--right {
+      text-align: left;
+    }
+  }
+</style>
