@@ -13,13 +13,13 @@ type Props = {
 
 const {
   title,
-  description = "えほんの森は、絵本の読み聞かせと地域での親子のつどいを大切にする活動です。",
+  description = "鹿児島県姶良市の絵本専門店『えほん もりのなか』のホームページです。2025年10月19日にオープンしました。",
   ogImage,
   ogType = "website",
   publishedTime,
 } = Astro.props;
 
-const siteName = "えほんの森";
+const siteName = "えほん もりのなか";
 const fullTitle = title ? `${title} | ${siteName}` : siteName;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;

@@ -1,0 +1,74 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import BookstartList from "~/components/BookstartList.astro";
+import { currentBookstartBooks } from "~/data/bookstart";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout
+  title="はじめて絵本におすすめの30冊"
+  description="NPOブックスタートの選書に合わせて、『えほん もりのなか』が短いコメントを添えてご紹介する、はじめての絵本におすすめの30冊（2024・2025・2026年度）です。"
+>
+  <section class="hero">
+    <div class="container">
+      <p class="hero__eyebrow">はじめて絵本におすすめの</p>
+      <h1 class="hero__title">30冊</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <h2 class="lede">
+        ブックスタート 2024・2025・2026年度
+      </h2>
+      <p>
+        こちらのNPOブックスタートの選書を2024・2025・2026年度版で実施しています。
+        『えほん もりのなか』店主からの短いコメントを添えてご紹介します。
+      </p>
+      <p>
+        <a class="button button--ghost" href={`${base}/bookstart/old/`}>
+          旧バージョン（2021・2022・2023年度）はこちら
+        </a>
+      </p>
+
+      <BookstartList books={currentBookstartBooks} imageDir="/images/bookstart-current" />
+
+      <p class="note muted">
+        ※ 書影画像は順次差し替え中です。最新の選書および詳細はNPOブックスタート公式情報もご参照ください。
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-accent-strong) 100%);
+    color: #fff;
+    padding-block: var(--space-7);
+    text-align: center;
+  }
+  .hero__eyebrow {
+    margin: 0 0 var(--space-2);
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    opacity: 0.92;
+  }
+  .hero__title {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 3rem);
+  }
+  .narrow {
+    max-width: 760px;
+  }
+  .lede {
+    font-size: 1.3rem;
+    border-left: 4px solid var(--color-accent);
+    padding-left: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+  .note {
+    font-size: 0.85rem;
+    margin-top: var(--space-7);
+  }
+</style>

@@ -1,86 +1,297 @@
 ---
 import BaseLayout from "~/layouts/BaseLayout.astro";
-import Hero from "~/components/Hero.astro";
-import SectionTitle from "~/components/SectionTitle.astro";
-import ActivityCard from "~/components/ActivityCard.astro";
-import InstagramCTA from "~/components/InstagramCTA.astro";
-import { getActivities } from "~/lib/microcms";
-
-const activities = await getActivities();
-const latest = activities.slice(0, 3);
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const link = (path: string) => `${base}${path}`;
 
-const heroImage = latest[0]?.mainImage
-  ? `${latest[0].mainImage.url}?w=1200&fm=webp`
-  : undefined;
+const instagramUrl = "https://www.instagram.com/";
+const googleMapUrl = "https://www.google.com/maps/search/?api=1&query=えほんもりのなか";
+
+const exhibitions = [
+  {
+    status: "upcoming",
+    image: "/images/placeholder-poster.svg",
+    imageAlt: "シャボンだまサーカス 原画展のポスター",
+    body: "絵本『シャボンだまサーカス』原画展を開催します。",
+  },
+  {
+    status: "past",
+    image: "/images/placeholder-poster.svg",
+    imageAlt: "ちきゅうパスポート 原画展の様子",
+    body: "『ちきゅうパスポート』原画展を開催しました。\n2025年11月15日(土)〜11月30日(日)\n6カ国24人の作家の原画を多くのお客さまにご覧いただきました。",
+  },
+];
 ---
 
-<BaseLayout
-  title={undefined}
-  description="えほんの森は、絵本の読み聞かせと地域でのつどいを大切にする小さな活動です。最新の活動やお知らせはInstagramで発信しています。"
->
-  <Hero imageSrc={heroImage} imageAlt={latest[0]?.title} />
+<BaseLayout description="鹿児島県姶良市の絵本専門店『えほん もりのなか』のホームページです。2025年10月19日にオープンしました。">
+  <section class="cover" aria-label="店内の様子">
+    <div class="cover__placeholder">
+      <span aria-hidden="true">📚</span>
+      <span class="cover__caption">店内の写真がここに入ります</span>
+    </div>
+  </section>
 
   <section class="section">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Recent activities"
-        title="最近の活動"
-        description="読み聞かせや絵本との出会いの場を、すこしずつ続けています。"
-      />
+    <div class="container narrow">
+      <p>『えほん もりのなか』のホームページにようこそ。</p>
 
-      {latest.length === 0 ? (
-        <p class="muted">まだ公開済みの活動記事がありません。</p>
-      ) : (
-        <div class="card-grid">
-          {latest.map((activity, i) => (
-            <ActivityCard activity={activity} eager={i === 0} />
-          ))}
-        </div>
-      )}
+      <p>
+        絵本専門士のえほんや<br />
+        『えほん もりのなか』<br />
+        2025年10月19日にオープンしました。<br />
+        みなさまのお越しを心よりお待ちしております。
+      </p>
 
-      {activities.length > 3 && (
-        <div class="more-link">
-          <a class="button button--ghost" href={`${base}/activities/`}>
-            活動の一覧を見る
-          </a>
+      <dl class="info">
+        <div>
+          <dt>住所</dt>
+          <dd>
+            鹿児島県姶良市平松3063 番地
+            <a href={googleMapUrl} target="_blank" rel="noopener noreferrer">
+              → Google マップ「えほんもりのなか」で検索
+            </a>
+          </dd>
         </div>
-      )}
+        <div>
+          <dt>電話</dt>
+          <dd>050-1026-6130</dd>
+        </div>
+      </dl>
+
+      <div class="exhibitions">
+        {exhibitions.map((ex) => (
+          <article class="exhibition">
+            <div class="exhibition__image">
+              <img src={`${base}${ex.image}`} alt={ex.imageAlt} />
+            </div>
+            <p class="exhibition__body">{ex.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <h2 class="section-heading">SNSアカウント</h2>
+      <p>
+        <a class="instagram-link" href={instagramUrl} target="_blank" rel="noopener noreferrer">
+          <span class="instagram-link__icon" aria-hidden="true">📷</span>
+          <span>Instagram</span>
+        </a>
+      </p>
+      <p>Instagramで情報を発信しています。最新情報は上記アカウントをご確認ください！</p>
+
+      <h2 class="section-heading">プロフィール</h2>
+      <div class="profile">
+        <div class="profile__avatar" aria-hidden="true">🌿</div>
+        <div class="profile__body">
+          <p>
+            絵本専門士　森ゆかり<br />
+            （絵本専門士とは、国立青少年教育振興機構の認定資格です。（第8期））<br />
+            鹿児島県姶良市在住。子ども3人。育児期に絵本の沼にはまる。<br />
+            かごしまメルヘン館での読みきかせボランティアに励む中、絵本のことを深く学び、絵本の力を伝えられる人になりたいと、強く思うように。フルタイムで長く働いてきたが定年まで待てない！と早期退職、絵本専門士となる。絵本がもたらす小さな幸せをひとりでも多くの人と分かち合い、絵本を好きになってもらおうと日々活動中。<br />
+            えほんや『えほん もりのなか』を2025年10月19日(日) オープン<br />
+            ©2024 Ehon no Mori
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="section about-preview">
-    <div class="container about-preview__inner">
-      <SectionTitle
-        eyebrow="About"
-        title="えほんの森について"
-        description="絵本を読むひとときを、子どもも大人も自分のペースで楽しめる場所をつくっています。"
-      />
-      <p>
-        週末の小さな読み聞かせ、季節のおはなし会、絵本を持ち寄って話す時間など、
-        地域の中で「絵本に触れる入り口」をすこしずつ用意しています。
-      </p>
-      <p>
-        <a class="button button--ghost" href={`${base}/about/`}>えほんの森について 詳しく</a>
-      </p>
+  <section class="section section--tight">
+    <div class="container narrow">
+      <h2 class="section-heading">絵本のご紹介</h2>
+      <a class="feature-card" href={link("/bookstart/")}>
+        <div class="feature-card__image" aria-hidden="true">
+          <span>🧸📖</span>
+        </div>
+        <div class="feature-card__caption">
+          はじめて絵本におすすめの30冊<br />
+          <span class="muted">こちらをクリック</span>
+        </div>
+      </a>
+
+      <h2 class="section-heading">最近の活動状況</h2>
+      <a class="feature-card" href={link("/activities/")}>
+        <div class="feature-card__image" aria-hidden="true">
+          <span>📚</span>
+        </div>
+        <div class="feature-card__caption">
+          <span class="muted">こちらをクリック</span>
+        </div>
+      </a>
     </div>
   </section>
-
-  <InstagramCTA />
 </BaseLayout>
 
 <style>
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-5);
+  .cover {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    background: var(--color-accent-soft);
+    overflow: hidden;
   }
-  .more-link {
-    margin-top: var(--space-6);
-    text-align: center;
+  .cover__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    font-size: 3rem;
+    color: var(--color-accent-strong);
   }
-  .about-preview__inner {
+  .cover__caption {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+  .narrow {
     max-width: 720px;
+  }
+  .info {
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-5) 0;
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .info > div {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--space-3);
+  }
+  .info dt {
+    font-weight: 700;
+    color: var(--color-muted);
+  }
+  .info dd {
+    margin: 0;
+  }
+  .info a {
+    margin-left: var(--space-2);
+  }
+  .exhibitions {
+    display: grid;
+    gap: var(--space-5);
+    margin-block: var(--space-7);
+  }
+  .exhibition {
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: var(--space-5);
+    align-items: center;
+    background: var(--color-surface);
+  }
+  .exhibition__image {
+    aspect-ratio: 3 / 4;
+    background: var(--color-accent-soft);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .exhibition__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .exhibition__body {
+    margin: 0;
+    white-space: pre-line;
+    line-height: 1.8;
+  }
+  .section-heading {
+    margin-top: var(--space-7);
+    margin-bottom: var(--space-4);
+    font-size: 1.25rem;
+    border-left: 4px solid var(--color-accent);
+    padding-left: var(--space-3);
+  }
+  .instagram-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .instagram-link__icon {
+    font-size: 1.5rem;
+  }
+  .profile {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .profile__avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--color-accent-soft);
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+  }
+  .profile__body p {
+    margin: 0;
+    line-height: 1.85;
+    font-size: 0.95rem;
+  }
+  .feature-card {
+    display: block;
+    text-decoration: none;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-surface);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent);
+  }
+  .feature-card__image {
+    aspect-ratio: 16 / 7;
+    background: var(--color-accent-soft);
+    display: grid;
+    place-items: center;
+    font-size: 3rem;
+  }
+  .feature-card__caption {
+    padding: var(--space-4);
+    text-align: center;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 640px) {
+    .info > div {
+      grid-template-columns: 60px 1fr;
+    }
+    .info a {
+      display: block;
+      margin-left: 0;
+      margin-top: var(--space-1);
+    }
+    .exhibition {
+      grid-template-columns: 1fr;
+    }
+    .exhibition__image {
+      max-width: 220px;
+      margin-inline: auto;
+    }
+    .profile {
+      grid-template-columns: 60px 1fr;
+      gap: var(--space-4);
+    }
+    .profile__avatar {
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+    }
   }
 </style>
