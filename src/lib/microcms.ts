@@ -44,18 +44,22 @@ type ListResponse<T> = {
 const serviceDomain = import.meta.env.MICROCMS_SERVICE_DOMAIN;
 const apiKey = import.meta.env.MICROCMS_API_KEY;
 
-if (!serviceDomain || !apiKey) {
-  throw new Error(
-    "microCMS environment variables are missing. Set MICROCMS_SERVICE_DOMAIN and MICROCMS_API_KEY in .env (local) or Repository Secrets (CI).",
+const isConfigured = Boolean(serviceDomain && apiKey);
+
+if (!isConfigured) {
+  console.warn(
+    "[microcms] MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY are not set. Building with empty activity data. Set them in .env (local) or Repository Secrets (CI) to fetch real content.",
   );
 }
 
-const baseUrl = `https://${serviceDomain}.microcms.io/api/v1`;
+const baseUrl = isConfigured
+  ? `https://${serviceDomain}.microcms.io/api/v1`
+  : "";
 
 async function fetchMicroCMS<T>(path: string): Promise<T> {
   const res = await fetch(`${baseUrl}${path}`, {
     headers: {
-      "X-MICROCMS-API-KEY": apiKey,
+      "X-MICROCMS-API-KEY": apiKey as string,
     },
   });
 
@@ -70,12 +74,14 @@ async function fetchMicroCMS<T>(path: string): Promise<T> {
 }
 
 export async function getActivities(): Promise<Activity[]> {
+  if (!isConfigured) return [];
   const data = await fetchMicroCMS<ListResponse<Activity>>(
     `/activities?orders=-date&limit=100`,
   );
   return data.contents;
 }
 
-export async function getActivityById(id: string): Promise<Activity> {
+export async function getActivityById(id: string): Promise<Activity | null> {
+  if (!isConfigured) return null;
   return fetchMicroCMS<Activity>(`/activities/${id}`);
 }
